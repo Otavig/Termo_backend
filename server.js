@@ -27,7 +27,7 @@ app.get("/aleatorio", (req, res) => {
 
   const palavraAleatoria =
     palavras[Math.floor(Math.random() * palavras.length)];
-  res.send(palavraAleatoria);
+  res.json({ word: palavraAleatoria }); // Envia a palavra como um objeto JSON
 });
 
 // Rota que verifica se a palavra existe no arquivo
