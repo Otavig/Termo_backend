@@ -1,7 +1,11 @@
 const express = require("express");
 const fs = require("fs");
+const cors = require("cors"); // Importa o pacote CORS
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Habilita CORS para todas as origens
+app.use(cors());
 
 // Função para ler as palavras do arquivo
 function obterPalavrasDoArquivo(caminhoArquivo) {
