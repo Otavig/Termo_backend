@@ -21,6 +21,7 @@ function obterPalavrasDoArquivo(caminhoArquivo) {
 
 // Caminho do arquivo com as palavras
 const caminhoArquivoSorteio = "src/palavras_sorteio.txt";
+const caminhoArquivoDicionario = "src/palavras.txt";
 
 // Rota que sorteia uma palavra aleatória
 app.get("/aleatorio", (req, res) => {
@@ -34,20 +35,40 @@ app.get("/aleatorio", (req, res) => {
   res.json({ word: palavraAleatoria }); // Envia a palavra como um objeto JSON
 });
 
-// Rota que verifica se a palavra existe no arquivo
 app.get("/verificar", (req, res) => {
   const palavra = req.query.palavra;
   if (!palavra) {
     return res.status(400).send("A palavra não foi fornecida");
   }
 
-  const palavras = obterPalavrasDoArquivo(caminhoArquivoSorteio);
+  const palavras = obterPalavrasDoArquivo(caminhoArquivoDicionario);
   if (palavras.length === 0) {
     return res.status(500).send("Erro ao carregar as palavras do arquivo");
   }
 
-  const palavraExiste = palavras.includes(palavra);
-  res.send(palavraExiste.toString()); // Retonar true or false
+  // Implementação da busca binária
+  function buscaBinaria(lista, alvo) {
+    let inicio = 0;
+    let fim = lista.length - 1;
+
+    while (inicio <= fim) {
+      const meio = Math.floor((inicio + fim) / 2);
+      const palavraAtual = lista[meio];
+
+      if (palavraAtual === alvo) {
+        return true;
+      } else if (palavraAtual < alvo) {
+        inicio = meio + 1;
+      } else {
+        fim = meio - 1;
+      }
+    }
+
+    return false;
+  }
+
+  const palavraExiste = buscaBinaria(palavras, palavra);
+  res.send(palavraExiste.toString()); // Retorna true ou false
 });
 
 app.listen(port, () => {
